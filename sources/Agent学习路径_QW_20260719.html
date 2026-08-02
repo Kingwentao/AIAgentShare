@@ -1,0 +1,2036 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Agent 开发学习路径 - 从零到通过企业面试</title>
+    <style>
+        :root {
+            --primary: #6C63FF;
+            --primary-dark: #5A52D5;
+            --secondary: #FF6584;
+            --accent: #43E97B;
+            --bg-dark: #0F0E17;
+            --bg-card: #1A1932;
+            --bg-card-hover: #232246;
+            --text-primary: #FFFFFE;
+            --text-secondary: #A7A9BE;
+            --border: #2E2D4A;
+            --gradient-1: linear-gradient(135deg, #6C63FF 0%, #43E97B 100%);
+            --gradient-2: linear-gradient(135deg, #FF6584 0%, #FFD166 100%);
+            --gradient-3: linear-gradient(135deg, #4FACFE 0%, #00F2FE 100%);
+            --gradient-4: linear-gradient(135deg, #A18CD1 0%, #FBC2EB 100%);
+            --gradient-5: linear-gradient(135deg, #F093FB 0%, #F5576C 100%);
+            --gradient-6: linear-gradient(135deg, #43E97B 0%, #38F9D7 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            line-height: 1.8;
+            overflow-x: hidden;
+        }
+
+        /* Animated Background */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .bg-animation .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.15;
+            animation: float 20s ease-in-out infinite;
+        }
+
+        .bg-animation .orb:nth-child(1) {
+            width: 600px; height: 600px;
+            background: var(--primary);
+            top: -200px; left: -200px;
+            animation-delay: 0s;
+        }
+        .bg-animation .orb:nth-child(2) {
+            width: 500px; height: 500px;
+            background: var(--secondary);
+            top: 50%; right: -150px;
+            animation-delay: -5s;
+        }
+        .bg-animation .orb:nth-child(3) {
+            width: 400px; height: 400px;
+            background: var(--accent);
+            bottom: -100px; left: 30%;
+            animation-delay: -10s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            25% { transform: translate(50px, -50px) scale(1.1); }
+            50% { transform: translate(-30px, 30px) scale(0.95); }
+            75% { transform: translate(40px, 20px) scale(1.05); }
+        }
+
+        /* Navigation */
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(15, 14, 23, 0.85);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            padding: 0 2rem;
+        }
+
+        .nav-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 64px;
+        }
+
+        .nav-logo {
+            font-size: 1.2rem;
+            font-weight: 700;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+            list-style: none;
+            flex-wrap: wrap;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.85rem;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--text-primary);
+        }
+
+        /* Hero */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 6rem 2rem 4rem;
+        }
+
+        .hero-content {
+            max-width: 800px;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            padding: 0.4rem 1.2rem;
+            background: rgba(108, 99, 255, 0.15);
+            border: 1px solid rgba(108, 99, 255, 0.3);
+            border-radius: 50px;
+            font-size: 0.85rem;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero h1 .highlight {
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            font-size: 1.15rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            margin-top: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        /* Sections */
+        .section {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .section-tag {
+            display: inline-block;
+            padding: 0.3rem 1rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .tag-purple { background: rgba(108,99,255,0.15); color: #6C63FF; }
+        .tag-pink { background: rgba(255,101,132,0.15); color: #FF6584; }
+        .tag-green { background: rgba(67,233,123,0.15); color: #43E97B; }
+        .tag-blue { background: rgba(79,172,254,0.15); color: #4FACFE; }
+        .tag-orange { background: rgba(255,165,0,0.15); color: #FFA500; }
+
+        .section-title {
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .section-desc {
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Cards */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            background: var(--bg-card-hover);
+            border-color: rgba(108,99,255,0.3);
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+
+        /* Roadmap / Timeline */
+        .roadmap {
+            position: relative;
+        }
+
+        .roadmap::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: linear-gradient(to bottom, var(--primary), var(--accent), var(--secondary));
+            border-radius: 3px;
+        }
+
+        .roadmap-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        .roadmap-item:nth-child(odd) {
+            flex-direction: row;
+        }
+
+        .roadmap-item:nth-child(even) {
+            flex-direction: row-reverse;
+        }
+
+        .roadmap-content {
+            width: 45%;
+            padding: 2rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .roadmap-content:hover {
+            border-color: rgba(108,99,255,0.4);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .roadmap-dot {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 3px solid var(--primary);
+            background: var(--bg-dark);
+            z-index: 10;
+            top: 2rem;
+        }
+
+        .roadmap-phase {
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+        }
+
+        .phase-1 { color: #6C63FF; }
+        .phase-2 { color: #4FACFE; }
+        .phase-3 { color: #43E97B; }
+        .phase-4 { color: #FFD166; }
+        .phase-5 { color: #FF6584; }
+        .phase-6 { color: #F093FB; }
+
+        .roadmap-content h3 {
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .roadmap-content .duration {
+            display: inline-block;
+            padding: 0.2rem 0.8rem;
+            background: rgba(108,99,255,0.1);
+            border-radius: 50px;
+            font-size: 0.8rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .roadmap-content ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .roadmap-content ul li {
+            padding: 0.3rem 0;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            position: relative;
+            padding-left: 1.5rem;
+        }
+
+        .roadmap-content ul li::before {
+            content: '▸';
+            position: absolute;
+            left: 0;
+            color: var(--primary);
+        }
+
+        .roadmap-output {
+            margin-top: 1rem;
+            padding: 0.8rem 1rem;
+            background: rgba(67,233,123,0.08);
+            border-left: 3px solid var(--accent);
+            border-radius: 0 8px 8px 0;
+            font-size: 0.85rem;
+            color: var(--accent);
+        }
+
+        /* Tech Stack Grid */
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .tech-card {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tech-card .card-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .tech-card h3 {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .tech-card p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .tech-card .tech-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .tech-tag {
+            padding: 0.2rem 0.7rem;
+            background: rgba(108,99,255,0.1);
+            border: 1px solid rgba(108,99,255,0.2);
+            border-radius: 50px;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        /* Resource Table */
+        .resource-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        .resource-table th,
+        .resource-table td {
+            padding: 1rem 1.2rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .resource-table th {
+            background: rgba(108,99,255,0.08);
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .resource-table td {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .resource-table tr:hover td {
+            background: rgba(108,99,255,0.03);
+        }
+
+        .resource-type {
+            display: inline-block;
+            padding: 0.2rem 0.6rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .type-book { background: rgba(255,101,132,0.15); color: #FF6584; }
+        .type-course { background: rgba(79,172,254,0.15); color: #4FACFE; }
+        .type-github { background: rgba(67,233,123,0.15); color: #43E97B; }
+        .type-doc { background: rgba(255,209,102,0.15); color: #FFD166; }
+        .type-video { background: rgba(161,140,209,0.15); color: #A18CD1; }
+
+        /* Interview Section */
+        .interview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .interview-card {
+            position: relative;
+        }
+
+        .interview-card .q-number {
+            position: absolute;
+            top: -10px;
+            right: 20px;
+            font-size: 3rem;
+            font-weight: 800;
+            opacity: 0.08;
+        }
+
+        .interview-card .q-category {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.5rem;
+        }
+
+        .interview-card h4 {
+            font-size: 1rem;
+            margin-bottom: 0.8rem;
+            line-height: 1.5;
+        }
+
+        .interview-card .answer-hint {
+            padding: 0.8rem 1rem;
+            background: rgba(108,99,255,0.06);
+            border-radius: 8px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            border-left: 3px solid var(--primary);
+        }
+
+        .difficulty {
+            display: inline-flex;
+            gap: 3px;
+            margin-left: 0.5rem;
+        }
+
+        .difficulty .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--border);
+        }
+
+        .difficulty .dot.active {
+            background: var(--secondary);
+        }
+
+        /* Schedule Table */
+        .schedule-wrapper {
+            overflow-x: auto;
+        }
+
+        .schedule-table {
+            width: 100%;
+            min-width: 800px;
+            border-collapse: collapse;
+        }
+
+        .schedule-table th,
+        .schedule-table td {
+            padding: 1rem;
+            text-align: center;
+            border: 1px solid var(--border);
+            font-size: 0.85rem;
+        }
+
+        .schedule-table th {
+            background: rgba(108,99,255,0.1);
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .schedule-table td {
+            color: var(--text-secondary);
+        }
+
+        .schedule-table .week-label {
+            background: rgba(108,99,255,0.05);
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .schedule-active {
+            background: rgba(67,233,123,0.08) !important;
+            color: var(--accent) !important;
+            font-weight: 600;
+        }
+
+        .schedule-review {
+            background: rgba(255,209,102,0.08) !important;
+            color: #FFD166 !important;
+        }
+
+        /* Project Cards */
+        .project-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .project-card {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .project-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+        }
+
+        .project-card:nth-child(1)::before { background: var(--gradient-1); }
+        .project-card:nth-child(2)::before { background: var(--gradient-2); }
+        .project-card:nth-child(3)::before { background: var(--gradient-3); }
+        .project-card:nth-child(4)::before { background: var(--gradient-4); }
+
+        .project-level {
+            display: inline-block;
+            padding: 0.2rem 0.8rem;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-bottom: 0.8rem;
+        }
+
+        .level-basic { background: rgba(67,233,123,0.15); color: #43E97B; }
+        .level-intermediate { background: rgba(79,172,254,0.15); color: #4FACFE; }
+        .level-advanced { background: rgba(255,101,132,0.15); color: #FF6584; }
+        .level-expert { background: rgba(161,140,209,0.15); color: #A18CD1; }
+
+        .project-card h3 {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .project-card p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .project-tech {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+        }
+
+        .project-tech span {
+            padding: 0.15rem 0.6rem;
+            background: rgba(255,255,255,0.05);
+            border-radius: 4px;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        /* Tips Section */
+        .tips-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .tip-card {
+            text-align: center;
+            padding: 2.5rem 2rem;
+        }
+
+        .tip-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .tip-card h3 {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .tip-card p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* Progress Bar */
+        .progress-section {
+            margin: 3rem 0;
+        }
+
+        .progress-item {
+            margin-bottom: 1.5rem;
+        }
+
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: rgba(108,99,255,0.1);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            border-radius: 10px;
+            transition: width 1s ease;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 3rem 2rem;
+            border-top: 1px solid var(--border);
+            margin-top: 4rem;
+        }
+
+        .footer p {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .roadmap::before {
+                left: 20px;
+            }
+
+            .roadmap-item,
+            .roadmap-item:nth-child(even) {
+                flex-direction: column;
+                padding-left: 50px;
+            }
+
+            .roadmap-content {
+                width: 100%;
+            }
+
+            .roadmap-dot {
+                left: 20px;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .hero-stats {
+                gap: 1.5rem;
+            }
+
+            .interview-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Checklist */
+        .checklist {
+            list-style: none;
+            padding: 0;
+        }
+
+        .checklist li {
+            padding: 0.6rem 0;
+            padding-left: 2rem;
+            position: relative;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            border-bottom: 1px solid rgba(46,45,74,0.5);
+        }
+
+        .checklist li::before {
+            content: '☐';
+            position: absolute;
+            left: 0;
+            color: var(--primary);
+            font-size: 1.1rem;
+        }
+
+        /* Highlight Box */
+        .highlight-box {
+            padding: 1.5rem 2rem;
+            border-radius: 12px;
+            margin: 1.5rem 0;
+        }
+
+        .highlight-box.info {
+            background: rgba(79,172,254,0.08);
+            border: 1px solid rgba(79,172,254,0.2);
+        }
+
+        .highlight-box.warning {
+            background: rgba(255,209,102,0.08);
+            border: 1px solid rgba(255,209,102,0.2);
+        }
+
+        .highlight-box.success {
+            background: rgba(67,233,123,0.08);
+            border: 1px solid rgba(67,233,123,0.2);
+        }
+
+        .highlight-box h4 {
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        .highlight-box p {
+            color: var(--text-secondary);
+            font-size: 0.88rem;
+        }
+
+        /* Animated entrance */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeIn 0.8s ease forwards;
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .delay-1 { animation-delay: 0.1s; }
+        .delay-2 { animation-delay: 0.2s; }
+        .delay-3 { animation-delay: 0.3s; }
+        .delay-4 { animation-delay: 0.4s; }
+
+        /* Architecture Diagram */
+        .arch-diagram {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+
+        .arch-layer {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .arch-block {
+            padding: 0.8rem 1.5rem;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-align: center;
+            min-width: 140px;
+        }
+
+        .arch-arrow {
+            font-size: 1.5rem;
+            color: var(--text-secondary);
+            opacity: 0.4;
+        }
+
+        .layer-app .arch-block { background: rgba(108,99,255,0.15); color: #6C63FF; border: 1px solid rgba(108,99,255,0.3); }
+        .layer-framework .arch-block { background: rgba(79,172,254,0.15); color: #4FACFE; border: 1px solid rgba(79,172,254,0.3); }
+        .layer-core .arch-block { background: rgba(67,233,123,0.15); color: #43E97B; border: 1px solid rgba(67,233,123,0.3); }
+        .layer-infra .arch-block { background: rgba(255,101,132,0.15); color: #FF6584; border: 1px solid rgba(255,101,132,0.3); }
+        .layer-model .arch-block { background: rgba(255,209,102,0.15); color: #FFD166; border: 1px solid rgba(255,209,102,0.3); }
+    </style>
+</head>
+<body>
+    <!-- Background Animation -->
+    <div class="bg-animation">
+        <div class="orb"></div>
+        <div class="orb"></div>
+        <div class="orb"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="nav-inner">
+            <div class="nav-logo">🤖 Agent Dev Path</div>
+            <ul class="nav-links">
+                <li><a href="#overview">概览</a></li>
+                <li><a href="#architecture">技术架构</a></li>
+                <li><a href="#roadmap">学习路线</a></li>
+                <li><a href="#resources">学习资源</a></li>
+                <li><a href="#projects">实战项目</a></li>
+                <li><a href="#interview">面试备战</a></li>
+                <li><a href="#schedule">学习计划</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="overview">
+        <div class="hero-content fade-in">
+            <div class="hero-badge">📅 2026年最新版 · 持续更新</div>
+            <h1>AI Agent 开发<br><span class="highlight">从零到Offer的高效学习路径</span></h1>
+            <p>系统化掌握智能体开发核心技术栈，从Prompt工程到多Agent协作，配套实战项目与面试真题，助你在大模型时代抢占先机。</p>
+            <div class="hero-stats">
+                <div class="stat-item">
+                    <div class="stat-number">6</div>
+                    <div class="stat-label">学习阶段</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">24</div>
+                    <div class="stat-label">周完整规划</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">50+</div>
+                    <div class="stat-label">面试高频题</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">4</div>
+                    <div class="stat-label">实战项目</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Architecture Section -->
+    <section class="section" id="architecture">
+        <div class="section-header">
+            <span class="section-tag tag-purple">ARCHITECTURE</span>
+            <h2 class="section-title">AI Agent 技术架构全景</h2>
+            <p class="section-desc">理解Agent系统的分层架构，是高效学习的第一步</p>
+        </div>
+
+        <div class="arch-diagram">
+            <div class="arch-layer layer-app">
+                <div class="arch-block">🎯 智能客服Agent</div>
+                <div class="arch-block">📊 数据分析Agent</div>
+                <div class="arch-block">💻 代码助手Agent</div>
+                <div class="arch-block">🔍 搜索增强Agent</div>
+            </div>
+            <div class="arch-arrow">⬇️</div>
+            <div class="arch-layer layer-framework">
+                <div class="arch-block">LangChain / LangGraph</div>
+                <div class="arch-block">CrewAI</div>
+                <div class="arch-block">AutoGen</div>
+                <div class="arch-block">Dify / Coze</div>
+            </div>
+            <div class="arch-arrow">⬇️</div>
+            <div class="arch-layer layer-core">
+                <div class="arch-block">🧠 规划 (Planning)</div>
+                <div class="arch-block">🔧 工具调用 (Tools)</div>
+                <div class="arch-block">💾 记忆 (Memory)</div>
+                <div class="arch-block">📚 RAG检索增强</div>
+            </div>
+            <div class="arch-arrow">⬇️</div>
+            <div class="arch-layer layer-infra">
+                <div class="arch-block">MCP协议</div>
+                <div class="arch-block">Function Calling</div>
+                <div class="arch-block">向量数据库</div>
+                <div class="arch-block">Prompt Engineering</div>
+            </div>
+            <div class="arch-arrow">⬇️</div>
+            <div class="arch-layer layer-model">
+                <div class="arch-block">GPT-4o / Claude</div>
+                <div class="arch-block">Qwen / DeepSeek</div>
+                <div class="arch-block">Llama / GLM</div>
+                <div class="arch-block">Embedding模型</div>
+            </div>
+        </div>
+
+        <div class="highlight-box info">
+            <h4>💡 核心认知</h4>
+            <p>AI Agent = LLM（大脑） + Planning（规划能力） + Tools（执行能力） + Memory（记忆能力） + RAG（知识增强）。<br>面试中最常考的就是这五大模块的原理和工程实现。</p>
+        </div>
+    </section>
+
+    <!-- Tech Stack Section -->
+    <section class="section" id="techstack">
+        <div class="section-header">
+            <span class="section-tag tag-blue">TECH STACK</span>
+            <h2 class="section-title">核心技术栈详解</h2>
+            <p class="section-desc">按优先级排序，掌握这些技术即可应对绝大多数Agent岗位面试</p>
+        </div>
+
+        <div class="tech-grid">
+            <div class="card tech-card">
+                <div class="card-icon" style="background: rgba(108,99,255,0.15);">🧠</div>
+                <h3>LLM基础与Prompt工程</h3>
+                <p>理解Transformer架构、Attention机制、大模型API调用；掌握Few-shot、CoT、ReAct等Prompt设计模式。</p>
+                <div class="tech-tags">
+                    <span class="tech-tag">Transformer</span>
+                    <span class="tech-tag">Chain-of-Thought</span>
+                    <span class="tech-tag">Few-shot</span>
+                    <span class="tech-tag">System Prompt</span>
+                </div>
+            </div>
+
+            <div class="card tech-card">
+                <div class="card-icon" style="background: rgba(79,172,254,0.15);">🔄</div>
+                <h3>ReAct与Agent推理模式</h3>
+                <p>掌握"思考-行动-观察"循环、三种规划模式（反应式/混合式/规划式）、任务分解与自我反思机制。</p>
+                <div class="tech-tags">
+                    <span class="tech-tag">ReAct</span>
+                    <span class="tech-tag">Plan-and-Execute</span>
+                    <span class="tech-tag">Reflexion</span>
+                    <span class="tech-tag">Tree of Thoughts</span>
+                </div>
+            </div>
+
+            <div class="card tech-card">
+                <div class="card-icon" style="background: rgba(67,233,123,0.15);">🔧</div>
+                <h3>工具调用与Function Calling</h3>
+                <p>理解LLM如何输出工具调用指令、框架如何解析执行；掌握MCP协议——标准化的工具调用"USB接口"。</p>
+                <div class="tech-tags">
+                    <span class="tech-tag">Function Calling</span>
+                    <span class="tech-tag">MCP协议</span>
+                    <span class="tech-tag">Tool Use</span>
+                    <span class="tech-tag">A2A协议</span>
+                </div>
+            </div>
+
+            <div class="card tech-card">
+                <div class="card-icon" style="background: rgba(255,101,132,0.15);">💾</div>
+                <h3>记忆系统设计</h3>
+                <p>短期记忆（对话上下文）、长期记忆（向量存储）、工作记忆（Scratchpad）；记忆压缩与检索策略。</p>
+                <div class="tech-tags">
+                    <span class="tech-tag">短期记忆</span>
+                    <span class="tech-tag">长期记忆</span>
+                    <span class="tech-tag">Buffer Memory</span>
+                    <span class="tech-tag">Summary Memory</span>
+                </div>
+            </div>
+
+            <div class="card tech-card">
+                <div class="card-icon" style="background: rgba(255,209,102,0.15);">📚</div>
+                <h3>RAG检索增强生成</h3>
+                <p>文档切片策略、Embedding模型选择、向量数据库（FAISS/Chroma/Milvus）、混合检索与重排序。</p>
+                <div class="tech-tags">
+                    <span class="tech-tag">Chunking</span>
+                    <span class="tech-tag">Embedding</span>
+                    <span class="tech-tag">FAISS</span>
+                    <span class="tech-tag">Reranker</span>
+                    <span class="tech-tag">Hybrid Search</span>
+                </div>
+            </div>
+
+            <div class="card tech-card">
+                <div class="card-icon" style="background: rgba(161,140,209,0.15);">🎭</div>
+                <h3>多Agent协作与编排</h3>
+                <p>多智能体通信模式、角色分工、LangGraph状态机图编排、CrewAI任务协作、Human-in-the-loop。</p>
+                <div class="tech-tags">
+                    <span class="tech-tag">LangGraph</span>
+                    <span class="tech-tag">CrewAI</span>
+                    <span class="tech-tag">AutoGen</span>
+                    <span class="tech-tag">状态机</span>
+                    <span class="tech-tag">DAG编排</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Roadmap Section -->
+    <section class="section" id="roadmap">
+        <div class="section-header">
+            <span class="section-tag tag-green">ROADMAP</span>
+            <h2 class="section-title">6阶段学习路线图</h2>
+            <p class="section-desc">从基础到面试，24周系统化进阶路径</p>
+        </div>
+
+        <div class="roadmap">
+            <!-- Phase 1 -->
+            <div class="roadmap-item">
+                <div class="roadmap-content">
+                    <div class="roadmap-phase phase-1">PHASE 1 · 第1-3周</div>
+                    <h3>🏗️ Python基础 & 大模型入门</h3>
+                    <span class="duration">⏱ 约60小时</span>
+                    <ul>
+                        <li>Python核心语法、异步编程、API开发（FastAPI）</li>
+                        <li>HTTP协议、RESTful API、JSON数据处理</li>
+                        <li>了解主流大模型（GPT-4o、Claude、Qwen、DeepSeek）</li>
+                        <li>学习API Key申请与模型调用（OpenAI SDK）</li>
+                        <li>Transformer架构基础、Attention机制原理</li>
+                    </ul>
+                    <div class="roadmap-output">
+                        ✅ 产出：完成一个调用大模型API的智能对话脚本
+                    </div>
+                </div>
+                <div class="roadmap-dot"></div>
+            </div>
+
+            <!-- Phase 2 -->
+            <div class="roadmap-item">
+                <div class="roadmap-content">
+                    <div class="roadmap-phase phase-2">PHASE 2 · 第4-6周</div>
+                    <h3>📝 Prompt工程 & ReAct推理</h3>
+                    <span class="duration">⏱ 约60小时</span>
+                    <ul>
+                        <li>Prompt设计模式：Zero-shot、Few-shot、CoT、ToT</li>
+                        <li>System Prompt设计、角色设定、输出格式控制</li>
+                        <li>ReAct框架：思考(Thought)-行动(Action)-观察(Observation)循环</li>
+                        <li>三种Agent规划模式：反应式、混合式、规划式</li>
+                        <li>Prompt注入防护与安全性考虑</li>
+                    </ul>
+                    <div class="roadmap-output">
+                        ✅ 产出：实现一个具备ReAct推理能力的问答Agent
+                    </div>
+                </div>
+                <div class="roadmap-dot"></div>
+            </div>
+
+            <!-- Phase 3 -->
+            <div class="roadmap-item">
+                <div class="roadmap-content">
+                    <div class="roadmap-phase phase-3">PHASE 3 · 第7-10周</div>
+                    <h3>🔧 工具调用 & RAG系统</h3>
+                    <span class="duration">⏱ 约80小时</span>
+                    <ul>
+                        <li>Function Calling机制深度理解与实践</li>
+                        <li>MCP协议：标准化工具调用的"USB接口"</li>
+                        <li>自定义Tool开发（搜索、数据库查询、代码执行）</li>
+                        <li>Embedding模型选择与文本向量化</li>
+                        <li>向量数据库实战：FAISS / Chroma / Milvus</li>
+                        <li>RAG完整流程：文档切片→向量化→检索→生成</li>
+                        <li>混合检索（关键词+语义）与Reranker重排序</li>
+                    </ul>
+                    <div class="roadmap-output">
+                        ✅ 产出：构建一个基于RAG的企业知识库问答系统
+                    </div>
+                </div>
+                <div class="roadmap-dot"></div>
+            </div>
+
+            <!-- Phase 4 -->
+            <div class="roadmap-item">
+                <div class="roadmap-content">
+                    <div class="roadmap-phase phase-4">PHASE 4 · 第11-14周</div>
+                    <h3>⛓️ LangChain/LangGraph框架精讲</h3>
+                    <span class="duration">⏱ 约80小时</span>
+                    <ul>
+                        <li>LangChain核心概念：Chain、Agent、Tool、Memory</li>
+                        <li>LangGraph状态机：节点、边、条件路由、循环</li>
+                        <li>图编排 vs 链式调用的区别与选型</li>
+                        <li>Human-in-the-loop人工审批机制</li>
+                        <li>记忆系统集成：Buffer / Summary / Entity Memory</li>
+                        <li>Streaming流式输出与异步执行</li>
+                        <li>LangSmith调试与可观测性</li>
+                    </ul>
+                    <div class="roadmap-output">
+                        ✅ 产出：用LangGraph构建一个多步骤工作流Agent
+                    </div>
+                </div>
+                <div class="roadmap-dot"></div>
+            </div>
+
+            <!-- Phase 5 -->
+            <div class="roadmap-item">
+                <div class="roadmap-content">
+                    <div class="roadmap-phase phase-5">PHASE 5 · 第15-19周</div>
+                    <h3>🤝 多Agent协作 & 高级特性</h3>
+                    <span class="duration">⏱ 约100小时</span>
+                    <ul>
+                        <li>多智能体系统设计：角色分工与通信模式</li>
+                        <li>CrewAI框架：基于角色的Agent团队协作</li>
+                        <li>AutoGen框架：对话式多Agent协作</li>
+                        <li>A2A协议（Agent-to-Agent）理解与实践</li>
+                        <li>Agent评估体系：准确性、延迟、成本优化</li>
+                        <li>Agent安全防护：Prompt注入、越狱攻击、权限控制</li>
+                        <li>生产部署：Docker容器化、API网关、监控告警</li>
+                    </ul>
+                    <div class="roadmap-output">
+                        ✅ 产出：构建一个多Agent协作的自动化工作流系统
+                    </div>
+                </div>
+                <div class="roadmap-dot"></div>
+            </div>
+
+            <!-- Phase 6 -->
+            <div class="roadmap-item">
+                <div class="roadmap-content">
+                    <div class="roadmap-phase phase-6">PHASE 6 · 第20-24周</div>
+                    <h3>🎯 面试冲刺 & 项目打磨</h3>
+                    <span class="duration">⏱ 约100小时</span>
+                    <ul>
+                        <li>系统梳理Agent核心知识体系（思维导图）</li>
+                        <li>刷面试高频题50+道（Agent/RAG/MCP/LLM方向）</li>
+                        <li>项目包装：README撰写、架构图绘制、Demo录制</li>
+                        <li>模拟面试：自我介绍、项目讲解、白板编码</li>
+                        <li>查漏补缺：大模型微调、RLHF、分布式部署</li>
+                        <li>简历优化：突出Agent项目经验与技术深度</li>
+                    </ul>
+                    <div class="roadmap-output">
+                        ✅ 产出：完整的面试作品集 + 模拟面试通过率≥80%
+                    </div>
+                </div>
+                <div class="roadmap-dot"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Resources Section -->
+    <section class="section" id="resources">
+        <div class="section-header">
+            <span class="section-tag tag-pink">RESOURCES</span>
+            <h2 class="section-title">精选学习资源</h2>
+            <p class="section-desc">书籍、课程、GitHub项目、官方文档，一站式学习材料</p>
+        </div>
+
+        <!-- Books -->
+        <h3 style="margin: 2rem 0 1rem; font-size: 1.2rem;">📖 推荐书籍</h3>
+        <div class="card" style="overflow-x: auto;">
+            <table class="resource-table">
+                <thead>
+                    <tr>
+                        <th>书名</th>
+                        <th>作者/出版社</th>
+                        <th>类型</th>
+                        <th>适合阶段</th>
+                        <th>核心价值</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>《AI Agent开发实战》</strong></td>
+                        <td>邢云阳 / 人民邮电出版社</td>
+                        <td><span class="resource-type type-book">书籍</span></td>
+                        <td>入门→进阶</td>
+                        <td>涵盖Function Calling、MCP、RAG、LangGraph、A2A，工程落地导向</td>
+                    </tr>
+                    <tr>
+                        <td><strong>《AI Agent智能体开发实践》</strong></td>
+                        <td>邓立国 / 清华大学出版社</td>
+                        <td><span class="resource-type type-book">书籍</span></td>
+                        <td>入门→实战</td>
+                        <td>16章系统讲解，含电商客服、旅行规划等多个实战案例</td>
+                    </tr>
+                    <tr>
+                        <td><strong>《零基础学AI Agent》</strong></td>
+                        <td>郭泽德 / 清华大学出版社</td>
+                        <td><span class="resource-type type-book">书籍</span></td>
+                        <td>零基础</td>
+                        <td>从概念到实操，覆盖GPTs、扣子、文心一言等主流平台</td>
+                    </tr>
+                    <tr>
+                        <td><strong>《Hands-On Large Language Models》</strong></td>
+                        <td>O'Reilly / Jay Alammar</td>
+                        <td><span class="resource-type type-book">书籍</span></td>
+                        <td>进阶</td>
+                        <td>LLM原理与可视化讲解，GitHub Stars 16.7k+</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Courses -->
+        <h3 style="margin: 2.5rem 0 1rem; font-size: 1.2rem;">🎓 推荐课程</h3>
+        <div class="card" style="overflow-x: auto;">
+            <table class="resource-table">
+                <thead>
+                    <tr>
+                        <th>课程名称</th>
+                        <th>讲师/平台</th>
+                        <th>类型</th>
+                        <th>语言</th>
+                        <th>核心价值</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>《动手学AI Agent》</strong></td>
+                        <td>李沐 (Mu Li)</td>
+                        <td><span class="resource-type type-video">视频</span></td>
+                        <td>中文</td>
+                        <td>从零搭建多智能体协作框架，实操性极强</td>
+                    </tr>
+                    <tr>
+                        <td><strong>《AI Agent系统设计 2025》</strong></td>
+                        <td>李宏毅 (Hung-yi Lee)</td>
+                        <td><span class="resource-type type-video">视频</span></td>
+                        <td>中文</td>
+                        <td>台大教授系统讲解Agent架构设计与决策树</td>
+                    </tr>
+                    <tr>
+                        <td><strong>《From LLMs to Agents》</strong></td>
+                        <td>Andrej Karpathy</td>
+                        <td><span class="resource-type type-video">视频</span></td>
+                        <td>英文</td>
+                        <td>前OpenAI/Tesla AI负责人，手搓AutoGPT架构</td>
+                    </tr>
+                    <tr>
+                        <td><strong>《10小时精通Agent框架》</strong></td>
+                        <td>Hugging Face官方</td>
+                        <td><span class="resource-type type-video">视频</span></td>
+                        <td>英文</td>
+                        <td>系统掌握现代Agent框架，官方权威性</td>
+                    </tr>
+                    <tr>
+                        <td><strong>AI Agent专项课</strong></td>
+                        <td>Andrew Ng (DeepLearning.AI)</td>
+                        <td><span class="resource-type type-course">课程</span></td>
+                        <td>英文</td>
+                        <td>AI领域顶级教育者，从理论到实践的完整体系</td>
+                    </tr>
+                    <tr>
+                        <td><strong>AI Agents for Beginners</strong></td>
+                        <td>微软官方</td>
+                        <td><span class="resource-type type-course">课程</span></td>
+                        <td>英文</td>
+                        <td>GitHub Stars 5.2k+，微软官方入门教程</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- GitHub Projects -->
+        <h3 style="margin: 2.5rem 0 1rem; font-size: 1.2rem;">💻 GitHub必刷项目</h3>
+        <div class="card" style="overflow-x: auto;">
+            <table class="resource-table">
+                <thead>
+                    <tr>
+                        <th>项目名称</th>
+                        <th>类型</th>
+                        <th>Stars</th>
+                        <th>学习价值</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>langchain-ai/langchain</strong></td>
+                        <td><span class="resource-type type-github">框架</span></td>
+                        <td>100k+</td>
+                        <td>最主流的Agent开发框架，必读源码</td>
+                    </tr>
+                    <tr>
+                        <td><strong>langchain-ai/langgraph</strong></td>
+                        <td><span class="resource-type type-github">框架</span></td>
+                        <td>10k+</td>
+                        <td>图编排引擎，面试高频考点LangGraph的源码</td>
+                    </tr>
+                    <tr>
+                        <td><strong>microsoft/autogen</strong></td>
+                        <td><span class="resource-type type-github">框架</span></td>
+                        <td>40k+</td>
+                        <td>微软多Agent对话框架，学习多Agent协作设计</td>
+                    </tr>
+                    <tr>
+                        <td><strong>crewAIInc/crewAI</strong></td>
+                        <td><span class="resource-type type-github">框架</span></td>
+                        <td>25k+</td>
+                        <td>基于角色的多Agent协作，上手简单</td>
+                    </tr>
+                    <tr>
+                        <td><strong>modelcontextprotocol</strong></td>
+                        <td><span class="resource-type type-doc">协议</span></td>
+                        <td>15k+</td>
+                        <td>MCP协议官方仓库，理解标准化工具调用</td>
+                    </tr>
+                    <tr>
+                        <td><strong>OpenDevin</strong></td>
+                        <td><span class="resource-type type-github">应用</span></td>
+                        <td>61k+</td>
+                        <td>开源AI软件工程师，学习复杂Agent系统设计</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Significant-Gravitas/AutoGPT</strong></td>
+                        <td><span class="resource-type type-github">应用</span></td>
+                        <td>170k+</td>
+                        <td>最早期的自主Agent项目，理解Agent核心理念</td>
+                    </tr>
+                    <tr>
+                        <td><strong>HandsOnLLM</strong></td>
+                        <td><span class="resource-type type-github">教程</span></td>
+                        <td>16.7k+</td>
+                        <td>LLM实战笔记本，配套书籍边学边练</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Official Docs -->
+        <h3 style="margin: 2.5rem 0 1rem; font-size: 1.2rem;">📄 必读官方文档</h3>
+        <div class="card" style="overflow-x: auto;">
+            <table class="resource-table">
+                <thead>
+                    <tr>
+                        <th>文档</th>
+                        <th>类型</th>
+                        <th>说明</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>OpenAI API Documentation</strong></td>
+                        <td><span class="resource-type type-doc">文档</span></td>
+                        <td>Function Calling、Assistants API、Tools使用的权威文档</td>
+                    </tr>
+                    <tr>
+                        <td><strong>LangChain / LangGraph Docs</strong></td>
+                        <td><span class="resource-type type-doc">文档</span></td>
+                        <td>框架使用的官方指南，含大量Cookbook示例</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Anthropic Claude Docs</strong></td>
+                        <td><span class="resource-type type-doc">文档</span></td>
+                        <td>Claude模型能力、Prompt Engineering最佳实践</td>
+                    </tr>
+                    <tr>
+                        <td><strong>MCP Specification</strong></td>
+                        <td><span class="resource-type type-doc">协议</span></td>
+                        <td>Model Context Protocol官方规范，面试必考</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section class="section" id="projects">
+        <div class="section-header">
+            <span class="section-tag tag-orange">PROJECTS</span>
+            <h2 class="section-title">4个实战项目推荐</h2>
+            <p class="section-desc">从简单到复杂递进，每个项目都对标企业真实场景和面试考点</p>
+        </div>
+
+        <div class="project-grid">
+            <div class="card project-card">
+                <span class="project-level level-basic">入门级</span>
+                <h3>🤖 智能客服Agent</h3>
+                <p>基于RAG的企业客服机器人，能根据产品文档回答用户问题，支持多轮对话和历史记录。</p>
+                <ul class="checklist">
+                    <li>RAG文档切片与向量化</li>
+                    <li>多轮对话记忆管理</li>
+                    <li>意图识别与路由</li>
+                    <li>满意度评估与兜底策略</li>
+                </ul>
+                <div class="project-tech">
+                    <span>LangChain</span>
+                    <span>FAISS</span>
+                    <span>OpenAI API</span>
+                    <span>FastAPI</span>
+                </div>
+            </div>
+
+            <div class="card project-card">
+                <span class="project-level level-intermediate">中级</span>
+                <h3>📊 数据分析Agent</h3>
+                <p>自然语言驱动的数据分析助手，能理解用户问题、生成SQL/Python代码、执行分析并可视化输出。</p>
+                <ul class="checklist">
+                    <li>Function Calling工具调用</li>
+                    <li>代码生成与安全执行沙箱</li>
+                    <li>多步推理与结果校验</li>
+                    <li>图表生成与结果解读</li>
+                </ul>
+                <div class="project-tech">
+                    <span>LangGraph</span>
+                    <span>Function Calling</span>
+                    <span>Pandas</span>
+                    <span>Matplotlib</span>
+                </div>
+            </div>
+
+            <div class="card project-card">
+                <span class="project-level level-advanced">高级</span>
+                <h3>✈️ 旅行规划多Agent系统</h3>
+                <p>多Agent协作完成复杂旅行规划：搜索Agent查信息、预算Agent算费用、行程Agent排日程、审查Agent做质检。</p>
+                <ul class="checklist">
+                    <li>多Agent角色设计与分工</li>
+                    <li>LangGraph状态机编排</li>
+                    <li>Agent间通信与结果汇总</li>
+                    <li>Human-in-the-loop审批</li>
+                </ul>
+                <div class="project-tech">
+                    <span>LangGraph</span>
+                    <span>CrewAI</span>
+                    <span>MCP</span>
+                    <span>Multi-Agent</span>
+                </div>
+            </div>
+
+            <div class="card project-card">
+                <span class="project-level level-expert">专家级</span>
+                <h3>💻 AI编程助手 (对标Cursor)</h3>
+                <p>能理解项目上下文、读写文件、运行测试、自我修正的编程Agent，具备完整的感知-决策-执行闭环。</p>
+                <ul class="checklist">
+                    <li>代码仓库上下文理解</li>
+                    <li>终端操作与文件系统访问</li>
+                    <li>自动测试与错误修复循环</li>
+                    <li>安全沙箱与权限控制</li>
+                </ul>
+                <div class="project-tech">
+                    <span>LangGraph</span>
+                    <span>Tree-sitter</span>
+                    <span>Docker Sandbox</span>
+                    <span>MCP</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="highlight-box success" style="margin-top: 2rem;">
+            <h4>🏆 项目展示建议</h4>
+            <p>每个项目完成后，务必：① 撰写清晰的README（含架构图、技术选型说明）；② 录制Demo视频（2-3分钟）；③ 在GitHub开源并持续维护；④ 写技术博客总结踩坑经验。这些都是面试时的有力加分项。</p>
+        </div>
+    </section>
+
+    <!-- Interview Section -->
+    <section class="section" id="interview">
+        <div class="section-header">
+            <span class="section-tag tag-pink">INTERVIEW</span>
+            <h2 class="section-title">面试高频题 Top 20</h2>
+            <p class="section-desc">来自字节、腾讯、百度、快手等大厂的真题汇总</p>
+        </div>
+
+        <div class="interview-grid">
+            <div class="card interview-card">
+                <div class="q-number">01</div>
+                <div class="q-category phase-1">Agent核心</div>
+                <h4>什么是AI Agent？它与传统的聊天机器人有何区别？</h4>
+                <div class="answer-hint">
+                    关键词：自主性、System Prompt + Tool + RAG、感知-决策-执行闭环。区别于Chatbot只能对话，Agent能理解目标、制定计划、调用工具、根据结果调整策略。
+                </div>
+            </div>
+
+            <div class="card interview-card">
+                <div class="q-number">02</div>
+                <div class="q-category phase-2">推理模式</div>
+                <h4>什么是ReAct？请描述它的思考-行动-观察循环。</h4>
+                <div class="answer-hint">
+                    ReAct = Reasoning + Acting。循环：Thought（分析当前状态）→ Action（选择并调用工具）→ Observation（获取执行结果）→ 判断是否需要继续。面试时画出流程图加分。
+                </div>
+            </div>
+
+            <div class="card interview-card">
+                <div class="q-number">03</div>
+                <div class="q-category phase-3">工具调用</div>
+                <h4>Function Calling的原理是什么？LLM如何调用外部工具？</h4>
+                <div class="answer-hint">
+                    LLM输出结构化的tool name + parameters JSON，框架层解析后执行对应函数，将结果回传LLM继续推理。本质是模型经过SFT/RLHF训练后具备的结构化输出能力。
+                </div>
+            </div>
+
+            <div class="card interview-card">
+                <div class="q-number">04</div>
+                <div class="q-category phase-3">协议</div>
+                <h4>MCP是什么？与Function Calling有什么区别？</h4>
+                <div class="answer-hint">
+                    MCP（Model Context Protocol）是标准化工具调用协议，类比"USB接口"——让不同Agent可以即插即用地调用各种工具服务。FC是模型层面的能力，MCP是协议层面的标准。
+                </div>
+            </div>
+
+            <div class="card interview-card">
+                <div class="q-number">05</div>
+                <div class="q-category phase-4">RAG</div>
+                <h4>RAG中长文档切片的粒度和分块策略如何设计？</h4>
+                <div class="answer-hint">
+                    考虑：固定长度vs语义切分、重叠窗口（overlap）、按段落/标题/代码块切分、父子文档结构。切片质量 > 检索算法 > 模型选择。
+                </div>
+            </div>
+
+            <div class="card interview-card">
+                <div class="q-number">06</div>
+                <div class="q-category phase-4">框架</div>
+                <h4>LangGraph和LangChain有什么区别？为什么需要图编排？</h4>
+                <div class="answer-hint">
+                    LangChain是链式调用（线性），LangGraph引入图结构（节点+边），支持条件分支、循环、回滚、并行执行。复杂Agent任务是非线性的，需要图编排。
+                </div>
+            </div>
+
+            <div class="card interview-card">
+                <div class="q-number">07</div>
+                <div class="q-category phase-5">多Agent</div>
+                <h4>多Agent系统有哪些通信模式？如何选择？</h4>
+                <div class="answer-hint">
+                    层级式（主控Agent分发）、辩论式（多Agent讨论达成共识）、流水线式（顺序传递）、黑板式（共享状态）。选择取决于任务复杂度、实时性要求和成本预算。
+                </div>
+            </div>
+
+            <div class="card interview-card">
+                <div class="q-number">08</div>
+                <div class="q-category phase-1">LLM基础</div>
+                <h4>请简要介绍Transformer架构和Self-Attention机制。</h4>
+                <div class="answer-hint">
+                    Q/K/V矩阵计算注意力权重、Multi-Head Attention、位置编码、Feed-Forward层。重点理解为什么Attention能让模型捕捉长距离依赖关系。
+                </div>
+            </div>
+
+            <div class="card interview-card">
+                <div class="q-number">09</div>
+                <div class="q-category phase-2">Prompt</div>
+                <h4>Prompt注入攻击有哪些类型？如何防护？</h4>
+                <div class="answer-hint">
+                    直接注入（覆盖System Prompt）、间接注入（通过RAG文档植入）、越狱攻击。防护：输入过滤、输出检测、权限最小化、System Prompt加固。
+                </div>
+            </div>
+
+            <div class="card interview-card">
+                <div class="q-number">10</div>
+                <div class="q-category phase-3">记忆</div>
+                <h4>Agent的记忆系统如何设计？短期记忆和长期记忆的区别？</h4>
+                <div class="answer-hint">
+                    短期记忆=对话上下文窗口；长期记忆=向量数据库持久化存储；工作记忆=当前任务scratchpad。需考虑：记忆压缩、检索策略、遗忘机制。
+                </div>
+            </div>
+
+            <div class="card interview-card">
+                <div class="q-number">11</div>
+                <div class="q-category phase-4">向量数据库</div>
+                <h4>FAISS、Chroma、Milvus如何选择？各有什么优缺点？</h4>
+                <div class="answer-hint">
+                    FAISS：本地高性能、无分布式；Chroma：轻量易集成、适合原型；Milvus：分布式生产级、大规模数据。选型看数据量级和部署环境。
+                </div>
+            </div>
+
+            <div class="card interview-card">
+                <div class="q-number">12</div>
+                <div class="q-category phase-4">RAG进阶</div>
+                <h4>如何评估和优化RAG系统的检索质量？</h4>
+                <div class="answer-hint">
+                    指标：Recall@K、MRR、NDCG。优化手段：Query改写、HyDE假设性文档嵌入、混合检索（BM25+语义）、Reranker重排序、元数据过滤。
+                </div>
+            </div>
+
+            <div class="card interview-card">
+                <div class="q-number">13</div>
+                <div class="q-category phase-5">工程化</div>
+                <h4>Agent系统上线后如何做可观测性和监控？</h4>
+                <div class="answer-hint">
+                    Trace链路追踪（LangSmith/Phoenix）、Token消耗监控、延迟分布、工具调用成功率、幻觉检测、用户满意度反馈闭环。
+                </div>
+            </div>
+
+            <div class="card interview-card">
+                <div class="q-number">14</div>
+                <div class="q-category phase-3">工具设计</div>
+                <h4>Agent可用工具太多怎么办？如何管理工具集？</h4>
+                <div class="answer-hint">
+                    每个Agent工具不超过15个；工具分层管理；动态工具选择（根据意图加载子集）；工具描述优化（让LLM更准确选择）；工具组合与编排。
+                </div>
+            </div>
+
+            <div class="card interview-card">
+                <div class="q-number">15</div>
+                <div class="q-category phase-5">A2A</div>
+                <h4>什么是A2A协议？与MCP有什么关系？</h4>
+                <div class="answer-hint">
+                    A2A（Agent-to-Agent）是Google提出的Agent间通信协议。MCP解决Agent与工具的通信，A2A解决Agent与Agent之间的协作通信。二者互补。
+                </div>
+            </div>
+
+            <div class="card interview-card">
+                <div class="q-number">16</div>
+                <div class="q-category phase-1">模型选型</div>
+                <h4>不同大模型（GPT-4o、Claude、Qwen）在Agent场景中如何选型？</h4>
+                <div class="answer-hint">
+                    考虑维度：Function Calling能力、上下文长度、延迟、成本、中文能力、工具调用准确率。建议构建Benchmark评测集进行实测对比。
+                </div>
+            </div>
+
+            <div class="card interview-card">
+                <div class="q-number">17</div>
+                <div class="q-category phase-4">LangGraph</div>
+                <h4>LangGraph中如何实现Human-in-the-loop？</h4>
+                <div class="answer-hint">
+                    使用interrupt_before/interrupt_after在中断点暂停图执行，等待人类审批后通过Command(resume=...)恢复。适用于高风险操作如发送邮件、执行转账等场景。
+                </div>
+            </div>
+
+            <div class="card interview-card">
+                <div class="q-number">18</div>
+                <div class="q-category phase-5">评估</div>
+                <h4>如何系统评估一个Agent的性能？</h4>
+                <div class="answer-hint">
+                    维度：任务完成率、工具调用准确率、推理步骤效率、延迟P99、Token成本、用户满意度。构建评测数据集，使用LLM-as-Judge自动评估。
+                </div>
+            </div>
+
+            <div class="card interview-card">
+                <div class="q-number">19</div>
+                <div class="q-category phase-2">推理</div>
+                <h4>Agent的三种规划模式是什么？各自的适用场景？</h4>
+                <div class="answer-hint">
+                    反应式（边做边想，适合简单任务）、规划式（先规划后执行，适合复杂任务）、混合式（规划+执行中动态调整，最灵活也最复杂）。面试必考！
+                </div>
+            </div>
+
+            <div class="card interview-card">
+                <div class="q-number">20</div>
+                <div class="q-category phase-5">项目实战</div>
+                <h4>请讲解你做过的Agent项目，遇到的最大技术挑战是什么？</h4>
+                <div class="answer-hint">
+                    STAR法则：Situation（背景）→ Task（任务）→ Action（你做了什么）→ Result（量化结果）。重点突出"解决了什么问题"而非"用了什么框架"。
+                </div>
+            </div>
+        </div>
+
+        <div class="highlight-box warning" style="margin-top: 2rem;">
+            <h4>⚠️ 面试高频考点分布（2026年最新）</h4>
+            <p>Agent核心概念（几乎必问） > RAG技术细节（90%会考） > Function Calling / MCP（80%会考） > LangGraph状态机（70%会考） > 多Agent协作（60%会考） > 大模型微调/部署（50%会考）</p>
+        </div>
+
+        <!-- Progress Bars for Interview Focus -->
+        <div class="progress-section">
+            <div class="progress-item">
+                <div class="progress-label">
+                    <span>Agent核心概念 & ReAct</span>
+                    <span>95%</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 95%; background: var(--gradient-1);"></div>
+                </div>
+            </div>
+            <div class="progress-item">
+                <div class="progress-label">
+                    <span>RAG检索增强生成</span>
+                    <span>90%</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 90%; background: var(--gradient-3);"></div>
+                </div>
+            </div>
+            <div class="progress-item">
+                <div class="progress-label">
+                    <span>Function Calling & MCP</span>
+                    <span>85%</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 85%; background: var(--gradient-6);"></div>
+                </div>
+            </div>
+            <div class="progress-item">
+                <div class="progress-label">
+                    <span>LangGraph / 框架使用</span>
+                    <span>75%</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 75%; background: var(--gradient-2);"></div>
+                </div>
+            </div>
+            <div class="progress-item">
+                <div class="progress-label">
+                    <span>多Agent协作</span>
+                    <span>65%</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 65%; background: var(--gradient-4);"></div>
+                </div>
+            </div>
+            <div class="progress-item">
+                <div class="progress-label">
+                    <span>大模型微调与部署</span>
+                    <span>50%</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 50%; background: var(--gradient-5);"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Schedule Section -->
+    <section class="section" id="schedule">
+        <div class="section-header">
+            <span class="section-tag tag-green">SCHEDULE</span>
+            <h2 class="section-title">24周学习计划表</h2>
+            <p class="section-desc">建议每周投入20-25小时（工作日2h + 周末5h×2）</p>
+        </div>
+
+        <div class="schedule-wrapper card">
+            <table class="schedule-table">
+                <thead>
+                    <tr>
+                        <th>周次</th>
+                        <th>阶段</th>
+                        <th>核心学习内容</th>
+                        <th>每周产出</th>
+                        <th>面试准备</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="week-label">W1-W2</td>
+                        <td rowspan="2" style="background:rgba(108,99,255,0.08); color:#6C63FF; font-weight:600;">P1<br>基础夯实</td>
+                        <td>Python进阶 + 异步编程 + FastAPI</td>
+                        <td class="schedule-active">API服务Demo</td>
+                        <td>-</td>
+                    </tr>
+                    <tr>
+                        <td class="week-label">W3</td>
+                        <td>大模型API调用 + Transformer原理</td>
+                        <td class="schedule-active">智能对话脚本</td>
+                        <td>了解行业概况</td>
+                    </tr>
+                    <tr>
+                        <td class="week-label">W4-W5</td>
+                        <td rowspan="2" style="background:rgba(79,172,254,0.08); color:#4FACFE; font-weight:600;">P2<br>Prompt&ReAct</td>
+                        <td>Prompt Engineering全套技术</td>
+                        <td class="schedule-active">Prompt模板库</td>
+                        <td>背Prompt相关题</td>
+                    </tr>
+                    <tr>
+                        <td class="week-label">W6</td>
+                        <td>ReAct框架实现 + 规划模式</td>
+                        <td class="schedule-active">ReAct Agent</td>
+                        <td>背ReAct/规划题</td>
+                    </tr>
+                    <tr>
+                        <td class="week-label">W7-W8</td>
+                        <td rowspan="3" style="background:rgba(67,233,123,0.08); color:#43E97B; font-weight:600;">P3<br>工具&RAG</td>
+                        <td>Function Calling + MCP协议 + 自定义Tool</td>
+                        <td class="schedule-active">Tool集成Agent</td>
+                        <td>背FC/MCP题</td>
+                    </tr>
+                    <tr>
+                        <td class="week-label">W9</td>
+                        <td>Embedding + 向量数据库 + 检索策略</td>
+                        <td class="schedule-active">向量检索Demo</td>
+                        <td>背向量数据库题</td>
+                    </tr>
+                    <tr>
+                        <td class="week-label">W10</td>
+                        <td>RAG完整系统搭建与优化</td>
+                        <td class="schedule-active">RAG知识库系统</td>
+                        <td>背RAG全套题</td>
+                    </tr>
+                    <tr>
+                        <td class="week-label">W11-W12</td>
+                        <td rowspan="3" style="background:rgba(255,209,102,0.08); color:#FFD166; font-weight:600;">P4<br>框架精讲</td>
+                        <td>LangChain核心模块学习</td>
+                        <td class="schedule-active">LangChain项目</td>
+                        <td>背LangChain题</td>
+                    </tr>
+                    <tr>
+                        <td class="week-label">W13</td>
+                        <td>LangGraph状态机 + 图编排</td>
+                        <td class="schedule-active">工作流Agent</td>
+                        <td>背LangGraph题</td>
+                    </tr>
+                    <tr>
+                        <td class="week-label">W14</td>
+                        <td>记忆系统 + Streaming + LangSmith</td>
+                        <td class="schedule-active">完整Agent系统</td>
+                        <td class="schedule-review">复习P1-P4</td>
+                    </tr>
+                    <tr>
+                        <td class="week-label">W15-W16</td>
+                        <td rowspan="4" style="background:rgba(255,101,132,0.08); color:#FF6584; font-weight:600;">P5<br>多Agent&高级</td>
+                        <td>多Agent系统设计 + CrewAI实战</td>
+                        <td class="schedule-active">多Agent项目</td>
+                        <td>背多Agent题</td>
+                    </tr>
+                    <tr>
+                        <td class="week-label">W17</td>
+                        <td>AutoGen + A2A协议 + Agent评估</td>
+                        <td class="schedule-active">评估报告</td>
+                        <td>背A2A/评估题</td>
+                    </tr>
+                    <tr>
+                        <td class="week-label">W18</td>
+                        <td>安全防护 + Prompt注入攻防</td>
+                        <td class="schedule-active">安全测试报告</td>
+                        <td>背安全相关题</td>
+                    </tr>
+                    <tr>
+                        <td class="week-label">W19</td>
+                        <td>Docker部署 + 监控 + 性能优化</td>
+                        <td class="schedule-active">部署上线</td>
+                        <td>背工程化题</td>
+                    </tr>
+                    <tr>
+                        <td class="week-label">W20-W21</td>
+                        <td rowspan="4" style="background:rgba(161,140,209,0.08); color:#A18CD1; font-weight:600;">P6<br>面试冲刺</td>
+                        <td>知识体系梳理 + 思维导图制作</td>
+                        <td class="schedule-review">思维导图</td>
+                        <td class="schedule-active">刷Top50题</td>
+                    </tr>
+                    <tr>
+                        <td class="week-label">W22</td>
+                        <td>项目打磨 + README + Demo录制</td>
+                        <td class="schedule-review">作品集</td>
+                        <td class="schedule-active">模拟面试</td>
+                    </tr>
+                    <tr>
+                        <td class="week-label">W23</td>
+                        <td>模拟面试 + 白板编码练习</td>
+                        <td class="schedule-review">面试复盘</td>
+                        <td class="schedule-active">全真模拟×3</td>
+                    </tr>
+                    <tr>
+                        <td class="week-label">W24</td>
+                        <td>简历优化 + 查漏补缺 + 心态调整</td>
+                        <td class="schedule-review">最终简历</td>
+                        <td class="schedule-active">🎯 开始投递!</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="highlight-box info" style="margin-top: 2rem;">
+            <h4>📌 学习节奏建议</h4>
+            <p>
+                <strong>工作日（每天2小时）：</strong>1小时学习理论/看课程 + 1小时编码练习<br>
+                <strong>周末（每天5小时）：</strong>2小时项目实战 + 2小时刷题/复习 + 1小时写博客/整理笔记<br>
+                <strong>关键原则：</strong>70%时间动手写代码，20%时间看文档/课程，10%时间写总结
+            </p>
+        </div>
+    </section>
+
+    <!-- Tips Section -->
+    <section class="section" id="tips">
+        <div class="section-header">
+            <span class="section-tag tag-purple">TIPS</span>
+            <h2 class="section-title">高效学习的7个秘诀</h2>
+            <p class="section-desc">过来人的经验之谈，避免走弯路</p>
+        </div>
+
+        <div class="tips-grid">
+            <div class="card tip-card">
+                <div class="tip-icon">🎯</div>
+                <h3>以终为始</h3>
+                <p>先研究10个目标公司的JD（职位描述），反推需要掌握的技能，避免学偏方向。</p>
+            </div>
+            <div class="card tip-card">
+                <div class="tip-icon">💻</div>
+                <h3>代码为王</h3>
+                <p>看懂≠会做。每个知识点都要动手写代码验证，Fork开源项目改代码是最快的学习方式。</p>
+            </div>
+            <div class="card tip-card">
+                <div class="tip-icon">📝</div>
+                <h3>费曼学习法</h3>
+                <p>每学一个概念，用自己的话写博客或录视频讲出来。能给别人讲明白，说明你真懂了。</p>
+            </div>
+            <div class="card tip-card">
+                <div class="tip-icon">🔁</div>
+                <h3>间隔复习</h3>
+                <p>使用Anki制作知识卡片，利用间隔重复算法巩固记忆。面试前2周集中刷卡片效果极佳。</p>
+            </div>
+            <div class="card tip-card">
+                <div class="tip-icon">🏗️</div>
+                <h3>项目驱动</h3>
+                <p>不要等"学完"再做项目。边学边做，遇到问题再查资料，这是最高效的学习闭环。</p>
+            </div>
+            <div class="card tip-card">
+                <div class="tip-icon">🤝</div>
+                <h3>加入社区</h3>
+                <p>加入GitHub Discussions、Discord社区、牛客网讨论组，和同行者交流可以加速理解。</p>
+            </div>
+            <div class="card tip-card">
+                <div class="tip-icon">📊</div>
+                <h3>量化进度</h3>
+                <p>每周记录学习时间、代码行数、完成题目数。数据可视化你的进步，保持动力。</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quick Reference -->
+    <section class="section">
+        <div class="section-header">
+            <span class="section-tag tag-blue">QUICK REFERENCE</span>
+            <h2 class="section-title">面试速查卡片</h2>
+            <p class="section-desc">核心概念的电梯演讲版本，面试前快速复习</p>
+        </div>
+
+        <div class="tech-grid">
+            <div class="card" style="border-left: 4px solid #6C63FF;">
+                <h3 style="color: #6C63FF; margin-bottom: 0.5rem;">Agent = ?</h3>
+                <p style="color: var(--text-secondary); font-size: 0.9rem;">
+                    Agent是一个以LLM为"大脑"的自主系统，通过 <strong>System Prompt</strong> 定义角色与行为，通过 <strong>Tools</strong> 与外部世界交互，通过 <strong>Memory</strong> 维持上下文连贯，通过 <strong>RAG</strong> 获取领域知识，具备感知、推理、规划、执行的完整能力闭环。
+                </p>
+            </div>
+            <div class="card" style="border-left: 4px solid #4FACFE;">
+                <h3 style="color: #4FACFE; margin-bottom: 0.5rem;">ReAct循环</h3>
+                <p style="color: var(--text-secondary); font-size: 0.9rem;">
+                    <strong>Thought</strong>（我需要搜索天气信息）→ <strong>Action</strong>（调用weather_api("北京")）→ <strong>Observation</strong>（返回：晴，28°C）→ <strong>Thought</strong>（已获得结果，可以回复用户）→ <strong>Final Answer</strong>。这就是一个完整的ReAct循环。
+                </p>
+            </div>
+            <div class="card" style="border-left: 4px solid #43E97B;">
+                <h3 style="color: #43E97B; margin-bottom: 0.5rem;">MCP协议</h3>
+                <p style="color: var(--text-secondary); font-size: 0.9rem;">
+                    MCP（Model Context Protocol）就像USB接口——定义了统一的工具调用标准。Agent通过MCP Client连接MCP Server，Server暴露各种工具（数据库、API、文件系统），实现"即插即用"的工具生态。
+                </p>
+            </div>
+            <div class="card" style="border-left: 4px solid #FF6584;">
+                <h3 style="color: #FF6584; margin-bottom: 0.5rem;">RAG流程</h3>
+                <p style="color: var(--text-secondary); font-size: 0.9rem;">
+                    <strong>离线：</strong>文档 → 切片(Chunking) → Embedding向量化 → 存入向量数据库<br>
+                    <strong>在线：</strong>用户问题 → Query向量化 → 相似度检索Top-K → 拼接上下文 → LLM生成答案<br>
+                    关键优化：混合检索 + Reranker重排序
+                </p>
+            </div>
+            <div class="card" style="border-left: 4px solid #FFD166;">
+                <h3 style="color: #FFD166; margin-bottom: 0.5rem;">LangGraph核心</h3>
+                <p style="color: var(--text-secondary); font-size: 0.9rem;">
+                    <strong>State</strong>（共享状态）+ <strong>Node</strong>（处理节点）+ <strong>Edge</strong>（连接边）+ <strong>Conditional Edge</strong>（条件路由）。支持循环、分支、并行、中断恢复，是构建复杂Agent工作流的利器。
+                </p>
+            </div>
+            <div class="card" style="border-left: 4px solid #A18CD1;">
+                <h3 style="color: #A18CD1; margin-bottom: 0.5rem;">多Agent模式</h3>
+                <p style="color: var(--text-secondary); font-size: 0.9rem;">
+                    <strong>Supervisor模式：</strong>一个主控Agent分配任务给子Agent<br>
+                    <strong>协作模式：</strong>多个Agent平等讨论、投票决策<br>
+                    <strong>流水线模式：</strong>A→B→C顺序处理<br>
+                    选型原则：简单用单Agent，复杂任务才上多Agent
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>📅 最后更新：2026年7月 | AI Agent 开发学习路径 v2.0</p>
+        <p style="margin-top: 0.5rem; font-size: 0.8rem; color: rgba(167,169,190,0.6);">
+            本指南基于2025-2026年行业最新趋势整理，建议每季度回顾更新一次。祝你学习顺利，早日拿下心仪Offer！🚀
+        </p>
+    </footer>
+
+    <script>
+        // Smooth scroll for nav links
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const target = document.querySelector(link.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+
+        // Intersection Observer for fade-in animations
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.card, .roadmap-content, .section-header').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(20px)';
+            el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>
